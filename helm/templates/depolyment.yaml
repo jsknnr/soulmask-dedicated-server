@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}"
+  labels:
+    app: "{{ .Chart.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}"
+      release: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      securityContext:
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+      containers:
+      - name: "{{ .Chart.Name }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SERVER_NAME
+          value: {{ .Values.config.serverName | quote }}
+        - name: SERVER_PASSWORD
+          value: {{ .Values.config.serverPassword | quote }}
+        - name: ADMIN_PASSWORD
+          value: {{ .Values.config.adminPassword | quote }}
+        - name: SERVER_LEVEL
+          value: {{ .Values.config.serverLevel | quote }}
+        - name: GAME_PORT
+          value: {{ .Values.config.gamePort | quote }}
+        - name: QUERY_PORT
+          value: {{ .Values.config.queryPort | quote }}
+        - name: LISTEN_ADDRESS
+          value: {{ .Values.config.listenAddress | quote }}
+        - name: SERVER_SLOTS
+          value: {{ .Values.config.serverSlots | quote }}
+        ports:
+        - name: game-port
+          containerPort: {{ .Values.config.gamePort | int }}
+          protocol: UDP
+        - name: query-port
+          containerPort: {{ .Values.config.queryPort | int }}
+          protocol: UDP
+        volumeMounts:
+        - name: data
+          mountPath: /home/steam/soulmask
+        securityContext:
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: "{{ .Chart.Name }}-data"
