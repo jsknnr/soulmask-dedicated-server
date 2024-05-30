@@ -1,0 +1,13 @@
+services:
+  soulmask:
+    image: sknnr/soulmask-dedicated-server:latest
+    ports:
+      - "27050:27050/udp"
+      - "27051:27051/udp"
+    env_file:
+      - default.env
+    volumes:
+      - soulmask-persistent-data:/home/steam/soulmask
+
+volumes:
+  soulmask-persistent-data:

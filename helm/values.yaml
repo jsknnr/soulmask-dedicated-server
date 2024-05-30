@@ -1,0 +1,28 @@
+image:
+  repository: sknnr/soulmask-dedicated-server
+  tag: latest
+
+service:
+  type: LoadBalancer
+  externalIPs: []
+  annotations: {}
+
+resources:
+  requests:
+    memory: 16G
+    cpu: 4.0
+
+volumes:
+  dataPVC:
+    size: 50Gi
+  storageClassName: ""
+
+config:
+  serverName: "Soulmask Containerized"
+  serverLevel: "Level01_Main"
+  serverPassword: ""
+  adminPassword: ""
+  gamePort: 27050
+  queryPort: 27051
+  serverSlots: 70
+  listenAddress: 0.0.0.0

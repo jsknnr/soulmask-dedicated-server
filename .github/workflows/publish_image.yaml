@@ -1,0 +1,28 @@
+name: Build and push Container image to Docker Hub
+on:
+  release:
+    types: [published]
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build image
+        id: buildah
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: soulmask-dedicated-server
+          context: ./container
+          containerfiles: ./container/Containerfile
+          build-args: |
+            IMAGE_VERSION=${{ github.event.release.tag_name }}
+          tags: latest ${{ github.event.release.tag_name }} # Use latest and the release tag
+      - name: Push image to Docker Hub
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.buildah.outputs.image }}
+          tags: ${{ steps.buildah.outputs.tags }}
+          registry: docker.io/${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
