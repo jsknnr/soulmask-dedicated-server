@@ -14,7 +14,7 @@ ENV STEAM_APP_ID "3017300"
 
 ENV GAME_PORT "27050"
 ENV QUERY_PORT "27051"
-ENV SERVER_SLOTS "70"
+ENV SERVER_SLOTS "50"
 ENV LISTEN_ADDRESS "0.0.0.0"
 ENV SERVER_LEVEL "Level01_Main"
 
@@ -27,6 +27,7 @@ RUN groupadd -g ${CONTAINER_GID} steam \
         curl \
         lib32gcc-s1 \
         locales \
+        procps \
     && echo 'LANG="en_US.UTF-8"' > /etc/default/locale \
     && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen \

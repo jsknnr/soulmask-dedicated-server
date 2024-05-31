@@ -19,10 +19,11 @@ volumes:
 
 config:
   serverName: "Soulmask Containerized"
+  gameMode: "pve"
   serverLevel: "Level01_Main"
   serverPassword: ""
   adminPassword: ""
   gamePort: 27050
   queryPort: 27051
-  serverSlots: 70
+  serverSlots: 50
   listenAddress: 0.0.0.0
