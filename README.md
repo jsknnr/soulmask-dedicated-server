@@ -12,22 +12,25 @@ The processes within the container do **NOT** run as root. Everything runs as th
 
 ### Ports
 
-| Port | Protocol | Default |
-| ---- | -------- | ------- |
-| Game Port | UDP | 27050 |
-| Query Port | UDP | 27051 |
+Game ports are arbitrary. You can use which ever values you want above 1000. Make sure that you are port forwarding (DNAT) correctly to your instance and that firewall rules are set correctly.
+
+| Port | Description | Protocol | Default |
+| ---- | ----------- | -------- | --------|
+| Game Port | Port for client connections, should be value above 1000 | UDP | 27050 |
+| Query Port | Port for server browser queries, should be a value above 1000 | UDP | 27051 |
 
 ### Environment Variables
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- | -------- |
 | SERVER_NAME | Name for the Server | Enshrouded Containerized | False |
+| GAME_MODE | Set server to either 'pve' or 'pvp' | None | True |
 | SERVER_PASSWORD | Password for the server | None | False |
 | ADMIN_PASSWORD | Password for GM admin on server | AdminPleaseChangeMe | False |
 | SERVER_LEVEL | Level for server to load. Currently there is only 1 so no need to change | Level01_Main | False |
 | GAME_PORT | Port for server connections | 27050 | False |
 | QUERY_PORT | Port for steam query of server | 27051 | False |
-| SERVER_SLOTS | Number of slots for connections (Max 70) | 70 | False |
+| SERVER_SLOTS | Number of slots for connections (Max 50) | 50 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
 
 ### Docker
@@ -43,7 +46,8 @@ docker run \
   --publish 27050:27050/udp \
   --publish 27051:27051/udp \
   --env=SERVER_NAME='Soulmask Containerized Server' \
-  --env=SERVER_SLOTS=70 \
+  --env=GAME_MODE='pve' \
+  --env=SERVER_SLOTS=50 \
   --env=SERVER_PASSWORD='PleaseChangeMe' \
   --env=ADMIN_PASSWORD='AdminPleaseChangeMe' \
   --env=GAME_PORT=27050 \
@@ -86,11 +90,12 @@ volumes:
 default.env file:
 ```properties
 SERVER_NAME="Soulmask Containerized"
+GAME_MODE="pve"
 SERVER_PASSWORD="ChangeMePlease"
 ADMIN_PASSWORD="AdminChangeMePlease"
 GAME_PORT="27050"
 QUERY_PORT="27051"
-SERVER_SLOTS="70"
+SERVER_SLOTS="50"
 LISTEN_ADDRESS="0.0.0.0"
 ```
 
@@ -107,7 +112,8 @@ podman run \
   --publish 27050:27050/udp \
   --publish 27051:27051/udp \
   --env=SERVER_NAME='Soulmask Containerized Server' \
-  --env=SERVER_SLOTS=70 \
+  --env=GAME_MODE='pve' \
+  --env=SERVER_SLOTS=50 \
   --env=SERVER_PASSWORD='PleaseChangeMe' \
   --env=ADMIN_PASSWORD='AdminPleaseChangeMe' \
   --env=GAME_PORT=27050 \
@@ -128,11 +134,12 @@ Volume=soulmask-persistent-data:/home/steam/soulmask
 PublishPort=27050-27051:27050-27051/udp
 ContainerName=soulmask-server
 Environment=SERVER_NAME="Soulmask Containerized"
+Environment=GAME_MODE="pve"
 Environment=SERVER_PASSWORD="ChangeMePlease"
 Environment=ADMIN_PASSWORD="AdminChangeMePlease"
 Environment=GAME_PORT="27050"
 Environment=QUERY_PORT="27051"
-Environment=SERVER_SLOTS="70"
+Environment=SERVER_SLOTS="50"
 Environment=LISTEN_ADDRESS="0.0.0.0"
 
 [Service]

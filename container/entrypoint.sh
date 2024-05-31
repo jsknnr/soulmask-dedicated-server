@@ -5,6 +5,18 @@ timestamp () {
   date +"%Y-%m-%d %H:%M:%S,%3N"
 }
 
+# Function to handle shutdown when sigterm is recieved
+shutdown () {
+    echo ""
+    echo "$(timestamp) INFO: Recieved SIGTERM, shutting down gracefully"
+    kill -2 $soulmask_pid
+    tail --pid=$soulmask_pid -f /dev/null
+    echo "$(timestamp) INFO: Shutdown complete"
+}
+
+# Set our trap
+trap 'shutdown' TERM
+
 # Set vars established during image build
 IMAGE_VERSION=$(cat /home/steam/image_version)
 MAINTAINER=$(cat /home/steam/image_maintainer)
@@ -26,6 +38,17 @@ fi
 
 if [ -z "$SERVER_PASSWORD" ]; then
     echo "$(timestamp) WARN: SERVER_PASSWORD not set, server will be open to the public"
+fi
+
+if [ -z "$GAME_MODE" ]; then
+    echo "$(timestamp) ERROR: GAME_MODE not set, must be 'pve' or 'pvp'"
+    exit 1
+else
+    echo $GAME_MODE
+    if [ "$GAME_MODE" != "pve" ] && [ "$GAME_MODE" != "pvp" ]; then
+        echo "$(timestamp) ERROR: GAME_MODE must be either 'pve' or 'pvp'"
+        exit 1
+    fi
 fi
 
 # Check for proper save permissions
@@ -53,9 +76,9 @@ fi
 
 # Build launch arguments
 echo "$(timestamp) INFO: Constructing launch arguments"
-LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=${SERVER_NAME} -MaxPlayers=${SERVER_SLOTS} -backup=900 -saving=600 -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
+LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=${SERVER_NAME} -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=900 -saving=600 -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
 
-if [ -n "${SERVER_PSASWORD}" ]; then
+if [ -n "${SERVER_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=${SERVER_PASSWORD}"
 fi
 
@@ -73,6 +96,7 @@ echo "                                                                          
 echo "$(timestamp) INFO: Launching Soulmask"
 echo "--------------------------------------------------------------------------------"
 echo "Server Name: ${SERVER_NAME}"
+echo "Game Mode: ${GAME_MODE}"
 echo "Server Level: ${SERVER_LEVEL}"
 echo "Server Password: ${SERVER_PASSWORD}"
 echo "Admin Password: ${ADMIN_PASSWORD}"
@@ -85,4 +109,23 @@ echo ""
 echo ""
 
 # Launch Soulmask
-${SOULMASK_PATH}/WSServer.sh ${LAUNCH_ARGS}
+${SOULMASK_PATH}/WSServer.sh ${LAUNCH_ARGS} &
+
+# Capture Soulmask server start script pid
+init_pid=$!
+
+# Capture Soulmask server binary pid
+timeout=0
+while [ $timeout -lt 11 ]; do
+    if ps -e | grep "WSServer-Linux"; then
+        soulmask_pid=$(ps -e | grep "WSServer-Linux" | awk '{print $1}')
+        break
+    elif [ $timeout -eq 10 ]; then
+        echo "$(timestamp) ERROR: Timed out waiting for WSServer-Linux to be running"
+        exit 1
+    fi
+    sleep 6
+    ((timeout++))
+done
+
+wait $init_pid
