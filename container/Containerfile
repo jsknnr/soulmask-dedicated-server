@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND "noninteractive"
 ENV SOULMASK_PATH "/home/steam/soulmask"
 ENV STEAMCMD_PATH "/home/steam/steamcmd"
 ENV STEAM_SDK64_PATH "/home/steam/.steam/sdk64"
-ENV STEAM_APP_ID "2889410"
+ENV STEAM_APP_ID "3017300"
 
 ENV GAME_PORT "27050"
 ENV QUERY_PORT "27051"
