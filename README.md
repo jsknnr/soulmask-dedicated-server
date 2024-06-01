@@ -30,7 +30,7 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 | SERVER_LEVEL | Level for server to load. Currently there is only 1 so no need to change | Level01_Main | False |
 | GAME_PORT | Port for server connections | 27050 | False |
 | QUERY_PORT | Port for steam query of server | 27051 | False |
-| SERVER_SLOTS | Number of slots for connections (Max 50) | 50 | False |
+| SERVER_SLOTS | Number of slots for connections (Max 70) | 50 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
 
 ### Docker
@@ -53,6 +53,7 @@ docker run \
   --env=GAME_PORT=27050 \
   --env=QUERY_PORT=27051 \
   --env=LISTEN_ADDRESS='0.0.0.0' \
+  --stop-timeout 90 \
   sknnr/soulmask-dedicated-server:latest
 ```
 
@@ -67,7 +68,7 @@ docker-compose up -d
 To bring the container down:
 
 ```bash
-docker-compose down
+docker-compose down --timeout 90
 ```
 
 compose.yaml file:
@@ -82,6 +83,7 @@ services:
       - default.env
     volumes:
       - soulmask-persistent-data:/home/steam/soulmask
+    stop_grace_period: 90s
 
 volumes:
   soulmask-persistent-data:
@@ -119,6 +121,7 @@ podman run \
   --env=GAME_PORT=27050 \
   --env=QUERY_PORT=27051 \
   --env=LISTEN_ADDRESS='0.0.0.0' \
+  --stop-timeout 90 \
   docker.io/sknnr/soulmask-dedicated-server:latest
 ```
 

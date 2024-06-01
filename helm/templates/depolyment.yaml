@@ -66,3 +66,4 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: "{{ .Chart.Name }}-data"
+      terminationGracePeriodSeconds: 90

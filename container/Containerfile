@@ -1,6 +1,6 @@
 FROM debian:12-slim
 
-ARG IMAGE_VERSION="v1.0.0"
+ARG IMAGE_VERSION="v1.0.0-devel"
 ARG MAINTAINER="https://github.com/jsknnr/soulmask-dedicated-server"
 
 ARG CONTAINER_GID=10000

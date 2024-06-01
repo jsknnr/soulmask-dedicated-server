@@ -10,8 +10,6 @@ shutdown () {
     echo ""
     echo "$(timestamp) INFO: Recieved SIGTERM, shutting down gracefully"
     kill -2 $soulmask_pid
-    tail --pid=$soulmask_pid -f /dev/null
-    echo "$(timestamp) INFO: Shutdown complete"
 }
 
 # Set our trap
@@ -44,7 +42,6 @@ if [ -z "$GAME_MODE" ]; then
     echo "$(timestamp) ERROR: GAME_MODE not set, must be 'pve' or 'pvp'"
     exit 1
 else
-    echo $GAME_MODE
     if [ "$GAME_MODE" != "pve" ] && [ "$GAME_MODE" != "pvp" ]; then
         echo "$(timestamp) ERROR: GAME_MODE must be either 'pve' or 'pvp'"
         exit 1
@@ -66,12 +63,16 @@ rm "${SOULMASK_PATH}/test"
 
 # Install/Update Soulmask
 echo "$(timestamp) INFO: Updating Soulmask Dedicated Server"
+echo ""
 ${STEAMCMD_PATH}/steamcmd.sh +force_install_dir "${SOULMASK_PATH}" +login anonymous +app_update ${STEAM_APP_ID} validate +quit
+echo ""
 
 # Check that steamcmd was successful
 if [ $? != 0 ]; then
     echo "$(timestamp) ERROR: steamcmd was unable to successfully initialize and update Soulmask"
     exit 1
+else
+    echo "$(timestamp) INFO: steamcmd update of Soulmask successful"
 fi
 
 # Build launch arguments
@@ -81,6 +82,9 @@ LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=${SERVER_NAME} -${
 if [ -n "${SERVER_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=${SERVER_PASSWORD}"
 fi
+
+# Let's go!
+echo "$(timestamp) INFO: Lighting the bonfire..."
 
 # Cheesy asci launch banner because I remember 1999
 echo ""
@@ -93,7 +97,7 @@ echo "/_______  /\_______  /______/ |_______ \____|__  /\____|__  /_______  /___
 echo "        \/         \/                 \/       \/         \/        \/        \/"
 echo "                                                                                "
 echo "                                                                                "
-echo "$(timestamp) INFO: Launching Soulmask"
+echo "$(timestamp) INFO: Launching Soulmask. Good luck out there, Chieftan!"
 echo "--------------------------------------------------------------------------------"
 echo "Server Name: ${SERVER_NAME}"
 echo "Game Mode: ${GAME_MODE}"
@@ -104,6 +108,7 @@ echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
 echo "Listen Address: ${LISTEN_ADDRESS}"
+echo "Container Image Version: ${IMAGE_VERSION} "
 echo "--------------------------------------------------------------------------------"
 echo ""
 echo ""
@@ -128,4 +133,13 @@ while [ $timeout -lt 11 ]; do
     ((timeout++))
 done
 
+# Hold us open until we recieve a SIGTERM
 wait $init_pid
+
+# Handle post SIGTERM from here
+# Hold us open until WSServer-Linux pid closes, indicating full shutdown, then go home
+tail --pid=$soulmask_pid -f /dev/null
+
+# o7
+echo "$(timestamp) INFO: Shutdown complete. Goodbye, Chieftan."
+exit 0
