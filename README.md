@@ -31,6 +31,8 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 | GAME_PORT | Port for server connections | 27050 | False |
 | QUERY_PORT | Port for steam query of server | 27051 | False |
 | SERVER_SLOTS | Number of slots for connections (Max 70) | 50 | False |
+| BACKUP | Specifies the interval for writing the game database to disk (unit: seconds) | 900 | False |
+| SAVING | Specifies the interval for writing game objects to the database (unit: seconds) | 600 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
 
 ### Docker
@@ -99,6 +101,8 @@ GAME_PORT="27050"
 QUERY_PORT="27051"
 SERVER_SLOTS="50"
 LISTEN_ADDRESS="0.0.0.0"
+BACKUP=900
+SAVING=600
 ```
 
 ### Podman

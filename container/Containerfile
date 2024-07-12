@@ -6,17 +6,19 @@ ARG MAINTAINER="https://github.com/jsknnr/soulmask-dedicated-server"
 ARG CONTAINER_GID=10000
 ARG CONTAINER_UID=10000
 
-ENV DEBIAN_FRONTEND "noninteractive"
-ENV SOULMASK_PATH "/home/steam/soulmask"
-ENV STEAMCMD_PATH "/home/steam/steamcmd"
-ENV STEAM_SDK64_PATH "/home/steam/.steam/sdk64"
-ENV STEAM_APP_ID "3017300"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV SOULMASK_PATH="/home/steam/soulmask"
+ENV STEAMCMD_PATH="/home/steam/steamcmd"
+ENV STEAM_SDK64_PATH="/home/steam/.steam/sdk64"
+ENV STEAM_APP_ID="3017300"
 
-ENV GAME_PORT "27050"
-ENV QUERY_PORT "27051"
-ENV SERVER_SLOTS "50"
-ENV LISTEN_ADDRESS "0.0.0.0"
-ENV SERVER_LEVEL "Level01_Main"
+ENV GAME_PORT="27050"
+ENV QUERY_PORT="27051"
+ENV SERVER_SLOTS="50"
+ENV LISTEN_ADDRESS="0.0.0.0"
+ENV SERVER_LEVEL="Level01_Main"
+ENV BACKUP=900
+ENV SAVING=600
 
 RUN groupadd -g ${CONTAINER_GID} steam \
     && useradd -g ${CONTAINER_GID} -u ${CONTAINER_UID} -m steam \

@@ -77,7 +77,7 @@ fi
 
 # Build launch arguments
 echo "$(timestamp) INFO: Constructing launch arguments"
-LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=${SERVER_NAME} -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=900 -saving=600 -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
+LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=${SERVER_NAME} -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=${BACKUP} -saving=${SAVING} -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
 
 if [ -n "${SERVER_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=${SERVER_PASSWORD}"
@@ -108,6 +108,8 @@ echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
 echo "Listen Address: ${LISTEN_ADDRESS}"
+echo "Database Backup (seconds): ${BACKUP}"
+echo "World Save (seconds): ${SAVING}"
 echo "Container Image Version: ${IMAGE_VERSION} "
 echo "--------------------------------------------------------------------------------"
 echo ""

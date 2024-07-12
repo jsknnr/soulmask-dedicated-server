@@ -27,3 +27,5 @@ config:
   queryPort: 27051
   serverSlots: 50
   listenAddress: 0.0.0.0
+  backup: 900
+  saving: 600
