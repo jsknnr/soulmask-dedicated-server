@@ -50,6 +50,10 @@ spec:
           value: {{ .Values.config.listenAddress | quote }}
         - name: SERVER_SLOTS
           value: {{ .Values.config.serverSlots | quote }}
+        - name: BACKUP
+          value: {{ .Values.config.backup }}
+        - name: SAVING
+          value: {{ .Values.config.saving }}
         ports:
         - name: game-port
           containerPort: {{ .Values.config.gamePort | int }}
