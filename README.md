@@ -23,7 +23,7 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- | -------- |
-| SERVER_NAME | Name for the Server | Enshrouded Containerized | False |
+| SERVER_NAME | Name for the Server | Soulmask Containerized | False |
 | GAME_MODE | Set server to either 'pve' or 'pvp' | None | True |
 | SERVER_PASSWORD | Password for the server | None | False |
 | ADMIN_PASSWORD | Password for GM admin on server | AdminPleaseChangeMe | False |
@@ -130,7 +130,7 @@ podman run \
 ```
 
 ### Quadlet
-To run the container with Podman's new quadlet subsystem, make a file under (when running as root) /etc/containers/systemd/enshrouded.container containing:
+To run the container with Podman's new quadlet subsystem, make a file under (when running as root) /etc/containers/systemd/soulmask.container containing:
 ```properties
 [Unit]
 Description=Soulmask Game Server
