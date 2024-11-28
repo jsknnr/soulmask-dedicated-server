@@ -130,7 +130,7 @@ podman run \
 ```
 
 ### Quadlet
-To run the container with Podman's new quadlet subsystem, make a file under (when running as root) /etc/containers/systemd/enshrouded.container containing:
+To run the container with Podman's new quadlet subsystem, make a file under (when running as root) /etc/containers/systemd/soulmask.container containing:
 ```properties
 [Unit]
 Description=Soulmask Game Server
