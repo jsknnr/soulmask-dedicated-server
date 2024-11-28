@@ -23,7 +23,7 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- | -------- |
-| SERVER_NAME | Name for the Server | Enshrouded Containerized | False |
+| SERVER_NAME | Name for the Server | Soulmask Containerized | False |
 | GAME_MODE | Set server to either 'pve' or 'pvp' | None | True |
 | SERVER_PASSWORD | Password for the server | None | False |
 | ADMIN_PASSWORD | Password for GM admin on server | AdminPleaseChangeMe | False |
