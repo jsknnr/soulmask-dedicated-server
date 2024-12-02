@@ -5,10 +5,10 @@ timestamp () {
   date +"%Y-%m-%d %H:%M:%S,%3N"
 }
 
-# Function to handle shutdown when sigterm is recieved
+# Function to handle shutdown when sigterm is received
 shutdown () {
     echo ""
-    echo "$(timestamp) INFO: Recieved SIGTERM, shutting down gracefully"
+    echo "$(timestamp) INFO: Received SIGTERM, shutting down gracefully"
     kill -2 $soulmask_pid
 }
 
@@ -32,10 +32,14 @@ fi
 if [ -z "$ADMIN_PASSWORD" ]; then
     echo "$(timestamp) WARN: ADMIN_PASSWORD not set, using default: AdminPleaseChangeMe"
     ADMIN_PASSWORD="AdminPleaseChangeMe"
+else
+    echo "$(timestamp) INFO: Admin password set."
 fi
 
 if [ -z "$SERVER_PASSWORD" ]; then
     echo "$(timestamp) WARN: SERVER_PASSWORD not set, server will be open to the public"
+else
+    echo "$(timestamp) INFO: Server password set."
 fi
 
 if [ -z "$GAME_MODE" ]; then
@@ -75,19 +79,42 @@ else
     echo "$(timestamp) INFO: steamcmd update of Soulmask successful"
 fi
 
+# Add support for mods
+extra_opts=()
+if [[ -n $MOD_ID_LIST ]]; then
+    extra_opts+=("-mod=\"${MOD_ID_LIST}\"")
+    echo "$(timestamp) INFO: Adding mods with ID list: ${MOD_ID_LIST}"
+else
+    echo "$(timestamp) WARN: No MOD_ID_LIST provided, running without mods"
+fi
+
+# Configure backup and saving intervals
+if [[ -n $INIT_BACKUP ]] && [[ $INIT_BACKUP == "true" ]]; then
+    extra_opts+=("-initbackup")
+fi
+if [[ -n $BACKUP_INTERVAL_MINUTES ]]; then
+    extra_opts+=("-backupinterval=${BACKUP_INTERVAL_MINUTES}")
+fi
+if [[ -n $SAVED_DIR_SUFFIX ]]; then
+    extra_opts+=("-saveddirsuffix=\"${SAVED_DIR_SUFFIX}\"")
+fi
+
 # Build launch arguments
 echo "$(timestamp) INFO: Constructing launch arguments"
-LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=\"${SERVER_NAME}\" -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=${BACKUP} -saving=${SAVING} -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
+LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=\"${SERVER_NAME}\" -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=${BACKUP} -saving=${SAVING} -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough ${extra_opts[@]}"
 
 if [ -n "${SERVER_PASSWORD}" ]; then
-    LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=${SERVER_PASSWORD}"
+    LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=\"${SERVER_PASSWORD}\""
+fi
+
+if [ -n "${ADMIN_PASSWORD}" ]; then
+    LAUNCH_ARGS="${LAUNCH_ARGS} -adminpsw=\"${ADMIN_PASSWORD}\""
 fi
 
 # Let's go!
 echo "$(timestamp) INFO: Lighting the bonfire..."
 
-# Cheesy asci launch banner because I remember 1999
-echo ""
+# Cheesy ASCII launch banner
 echo ""
 echo "  _________________   ____ ___.____       _____      _____    _____________  __."
 echo " /   _____/\_____  \ |    |   \    |     /     \    /  _  \  /   _____/    |/ _|"
@@ -95,24 +122,18 @@ echo " \_____  \  /   |   \|    |   /    |    /  \ /  \  /  /_\  \ \_____  \|   
 echo " /        \/    |    \    |  /|    |___/    Y    \/    |    \/        \    |  \ "
 echo "/_______  /\_______  /______/ |_______ \____|__  /\____|__  /_______  /____|__ \\"
 echo "        \/         \/                 \/       \/         \/        \/        \/"
-echo "                                                                                "
-echo "                                                                                "
-echo "$(timestamp) INFO: Launching Soulmask. Good luck out there, Chieftan!"
+echo ""
+echo "$(timestamp) INFO: Launching Soulmask. Good luck out there, Chieftain!"
 echo "--------------------------------------------------------------------------------"
 echo "Server Name: ${SERVER_NAME}"
 echo "Game Mode: ${GAME_MODE}"
-echo "Server Level: ${SERVER_LEVEL}"
+echo "Mods: ${MOD_ID_LIST}"
 echo "Server Password: ${SERVER_PASSWORD}"
 echo "Admin Password: ${ADMIN_PASSWORD}"
 echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
-echo "Listen Address: ${LISTEN_ADDRESS}"
-echo "Database Backup (seconds): ${BACKUP}"
-echo "World Save (seconds): ${SAVING}"
-echo "Container Image Version: ${IMAGE_VERSION} "
 echo "--------------------------------------------------------------------------------"
-echo ""
 echo ""
 
 # Launch Soulmask
@@ -135,7 +156,7 @@ while [ $timeout -lt 11 ]; do
     ((timeout++))
 done
 
-# Hold us open until we recieve a SIGTERM
+# Hold us open until we receive a SIGTERM
 wait $init_pid
 
 # Handle post SIGTERM from here
@@ -143,5 +164,5 @@ wait $init_pid
 tail --pid=$soulmask_pid -f /dev/null
 
 # o7
-echo "$(timestamp) INFO: Shutdown complete. Goodbye, Chieftan."
+echo "$(timestamp) INFO: Shutdown complete. Goodbye, Chieftain."
 exit 0
