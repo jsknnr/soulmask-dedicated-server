@@ -34,6 +34,9 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 | BACKUP | Specifies the interval for writing the game database to disk (unit: seconds) | 900 | False |
 | SAVING | Specifies the interval for writing game objects to the database (unit: seconds) | 600 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
+| RCON_ADDR | IP address to bind the RCON listener to | 127.0.0.1 | False |
+| RCON_PORT | TCP port that the RCON listener will bind to | 19000 | False |
+| RCON_PASSWORD | Password for the RCON client to connect | None | False |
 
 ### Docker
 
@@ -103,6 +106,9 @@ SERVER_SLOTS="50"
 LISTEN_ADDRESS="0.0.0.0"
 BACKUP=900
 SAVING=600
+RCON_ADDR=""
+RCON_PASSWORD=""
+RCON_PORT=19000
 ```
 
 ### Podman
