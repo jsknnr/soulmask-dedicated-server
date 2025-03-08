@@ -2,7 +2,6 @@
 
 [![Static Badge](https://img.shields.io/badge/DockerHub-blue)](https://hub.docker.com/r/sknnr/soulmask-dedicated-server) ![Docker Pulls](https://img.shields.io/docker/pulls/sknnr/soulmask-dedicated-server) [![Static Badge](https://img.shields.io/badge/GitHub-green)](https://github.com/jsknnr/soulmask-dedicated-server) ![GitHub Repo stars](https://img.shields.io/github/stars/jsknnr/soulmask-dedicated-server)
 
-
 Run Soulmask dedicated server in a container. Optionally includes helm chart for running in Kubernetes.
 
 **Disclaimer:** This is not an official image. No support, implied or otherwise is offered to any end user by the author or anyone else. Feel free to do what you please with the contents of this repo.
@@ -35,15 +34,12 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 | BACKUP | Specifies the interval for writing the game database to disk (unit: seconds) | 900 | False |
 | SAVING | Specifies the interval for writing game objects to the database (unit: seconds) | 600 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
-<<<<<<< Updated upstream
-=======
 | INIT_BACKUP | If "true", server will backup world on each server start | None | False |
 | BACKUP_INTERVAL_MINUTES | Specifies in minutes how often to backup the world. Warning, backups are not cleaned up automatically | None | False |
 | RCON_ADDRESS | IP address to bind the RCON listener to | 0.0.0.0 | False |
 | RCON_PORT | TCP port that the RCON listener will bind to | 19000 | False |
 | RCON_PASSWORD | Password for the RCON client to connect | None | False |
 | MOD_ID_LIST | Comma separated list of mod IDs | None | False |
->>>>>>> Stashed changes
 
 ### Docker
 
@@ -115,7 +111,7 @@ SERVER_SLOTS="50"
 LISTEN_ADDRESS="0.0.0.0"
 BACKUP=900
 SAVING=600
-RCON_ADDR=""
+RCON_ADDRESS=""
 RCON_PASSWORD=""
 RCON_PORT=""
 MOD_ID_LIST=
