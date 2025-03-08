@@ -89,7 +89,6 @@ else
 fi
 
 # Configure backup and saving intervals
-<<<<<<< HEAD
 # initbackup creates a backup each time server starts
 if [[ -n $INIT_BACKUP ]] && [[ $INIT_BACKUP == "true" ]]; then
     extra_opts+=("-initbackup")
@@ -98,17 +97,6 @@ fi
 if [[ -n $BACKUP_INTERVAL_MINUTES ]]; then
     extra_opts+=("-backupinterval=${BACKUP_INTERVAL_MINUTES}")
 fi
-=======
-if [[ -n $INIT_BACKUP ]] && [[ $INIT_BACKUP == "true" ]]; then
-    extra_opts+=("-initbackup")
-fi
-if [[ -n $BACKUP_INTERVAL_MINUTES ]]; then
-    extra_opts+=("-backupinterval=${BACKUP_INTERVAL_MINUTES}")
-fi
-if [[ -n $SAVED_DIR_SUFFIX ]]; then
-    extra_opts+=("-saveddirsuffix=\"${SAVED_DIR_SUFFIX}\"")
-fi
->>>>>>> origin
 
 # Build launch arguments
 echo "$(timestamp) INFO: Constructing launch arguments"
@@ -122,13 +110,8 @@ if [ -n "${ADMIN_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -adminpsw=\"${ADMIN_PASSWORD}\""
 fi
 
-<<<<<<< HEAD
-if [ -n "${RCON_ADDRESS}" ] && [ -n "${RCON_PASSWORD}" ]; then
-    LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDRESS} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
-=======
 if [ -n "${RCON_ADDR}" ] && [ -n "${RCON_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDR} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
->>>>>>> origin
 fi
 
 # Let's go!
@@ -148,20 +131,13 @@ echo "--------------------------------------------------------------------------
 echo "Server Name: ${SERVER_NAME}"
 echo "Game Mode: ${GAME_MODE}"
 echo "Mods: ${MOD_ID_LIST}"
-<<<<<<< HEAD
-echo "Server Level: ${SERVER_LEVEL}"
-=======
->>>>>>> origin
 echo "Server Password: ${SERVER_PASSWORD}"
 echo "Admin Password: ${ADMIN_PASSWORD}"
 echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
-<<<<<<< HEAD
 echo "RCON Port: ${RCON_PORT}"
 echo "RCON Password: ${RCON_PASSWORD}"
-=======
->>>>>>> origin
 echo "--------------------------------------------------------------------------------"
 echo ""
 
