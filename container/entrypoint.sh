@@ -89,14 +89,13 @@ else
 fi
 
 # Configure backup and saving intervals
+# initbackup creates a backup each time server starts
 if [[ -n $INIT_BACKUP ]] && [[ $INIT_BACKUP == "true" ]]; then
     extra_opts+=("-initbackup")
 fi
+# backupinterval creates a backup every X minutes, the server does not clean these backups up
 if [[ -n $BACKUP_INTERVAL_MINUTES ]]; then
     extra_opts+=("-backupinterval=${BACKUP_INTERVAL_MINUTES}")
-fi
-if [[ -n $SAVED_DIR_SUFFIX ]]; then
-    extra_opts+=("-saveddirsuffix=\"${SAVED_DIR_SUFFIX}\"")
 fi
 
 # Build launch arguments
@@ -111,8 +110,8 @@ if [ -n "${ADMIN_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -adminpsw=\"${ADMIN_PASSWORD}\""
 fi
 
-if [ -n "${RCON_ADDR}" ] && [ -n "${RCON_PASSWORD}" ]; then
-    LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDR} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
+if [ -n "${RCON_ADDRESS}" ] && [ -n "${RCON_PASSWORD}" ]; then
+    LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDRESS} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
 fi
 
 # Let's go!
@@ -137,6 +136,8 @@ echo "Admin Password: ${ADMIN_PASSWORD}"
 echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
+echo "RCON Port: ${RCON_PORT}"
+echo "RCON Password: ${RCON_PASSWORD}"
 echo "--------------------------------------------------------------------------------"
 echo ""
 

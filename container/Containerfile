@@ -17,9 +17,9 @@ ENV QUERY_PORT="27051"
 ENV SERVER_SLOTS="50"
 ENV LISTEN_ADDRESS="0.0.0.0"
 ENV SERVER_LEVEL="Level01_Main"
+ENV GAME_MODE="pve"
 ENV BACKUP=900
 ENV SAVING=600
-ENV MOD_ID_LIST=
 
 RUN groupadd -g ${CONTAINER_GID} steam \
     && useradd -g ${CONTAINER_GID} -u ${CONTAINER_UID} -m steam \
@@ -46,9 +46,7 @@ RUN mkdir -p ${SOULMASK_PATH} \
     && mkdir -p ${STEAMCMD_PATH} \
     && curl -sqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar zxvf - -C ${STEAMCMD_PATH} \
     && chmod +x ${STEAMCMD_PATH}/steamcmd.sh \
-    && ${STEAMCMD_PATH}/steamcmd.sh +login anonymous \
-    +app_update ${STEAM_APP_ID} validate \
-    +quit  \
+    && ${STEAMCMD_PATH}/steamcmd.sh +quit \
     && mkdir -p ${STEAM_SDK64_PATH} \
     && cp ${STEAMCMD_PATH}/linux64/steamclient.so ${STEAM_SDK64_PATH}/steamclient.so \
     && echo "${IMAGE_VERSION}" > /home/steam/image_version \

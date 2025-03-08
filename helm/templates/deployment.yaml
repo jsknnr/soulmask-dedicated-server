@@ -36,10 +36,14 @@ spec:
           value: {{ .Values.config.serverName | quote }}
         - name: GAME_MODE
           value: {{ .Values.config.gameMode | quote }}
+        {{- if .Values.config.serverPassword }}
         - name: SERVER_PASSWORD
           value: {{ .Values.config.serverPassword | quote }}
+        {{- end }}
+        {{- if .Values.config.adminPassword }}
         - name: ADMIN_PASSWORD
           value: {{ .Values.config.adminPassword | quote }}
+        {{- end }}
         - name: SERVER_LEVEL
           value: {{ .Values.config.serverLevel | quote }}
         - name: GAME_PORT
@@ -54,6 +58,30 @@ spec:
           value: {{ .Values.config.backup }}
         - name: SAVING
           value: {{ .Values.config.saving }}
+        {{- if .Values.config.rconAddress }}
+        - name: RCON_ADDRESS
+          value: {{ .Values.config.rconAddress | quote }}
+        {{- end }}
+        {{- if .Values.config.rconPort }}
+        - name: RCON_PORT
+          value: {{ .Values.config.rconPort | quote }}
+        {{- end }}
+        {{- if .Values.config.rconPassword }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.config.rconPassword | quote }}
+        {{- end }}
+        {{- if .Values.config.modIdList }}
+        - name: MOD_ID_LIST
+          value: {{ .Values.config.modIdList }}
+        {{- end }}
+        {{- if .Values.config.backIntervalMinutes }}
+        - name: BACK_INTERVAL_MINUTES
+          value: {{ .Values.config.backIntervalMinutes }}
+        {{- end }}
+        {{- if .Values.config.initBackup }}
+        - name: INIT_BACKUP
+          value: {{ .Values.config.initBackup }}
+        {{- end }}
         ports:
         - name: game-port
           containerPort: {{ .Values.config.gamePort | int }}
