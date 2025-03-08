@@ -29,3 +29,9 @@ config:
   listenAddress: 0.0.0.0
   backup: 900
   saving: 600
+  rconAddress: ""
+  rconPort: ""
+  rconPassword: ""
+  modIdList: 
+  backIntervalMinutes: ""
+  initBackup: "false"

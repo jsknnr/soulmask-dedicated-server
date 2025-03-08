@@ -75,12 +75,39 @@ else
     echo "$(timestamp) INFO: steamcmd update of Soulmask successful"
 fi
 
+# Add support for mods
+extra_opts=()
+if [[ -n $MOD_ID_LIST ]]; then
+    extra_opts+=("-mod=\"${MOD_ID_LIST}\"")
+    echo "$(timestamp) INFO: Adding mods with ID list: ${MOD_ID_LIST}"
+else
+    echo "$(timestamp) WARN: No MOD_ID_LIST provided, running without mods"
+fi
+
+# Configure backup and saving intervals
+# initbackup creates a backup each time server starts
+if [[ -n $INIT_BACKUP ]] && [[ $INIT_BACKUP == "true" ]]; then
+    extra_opts+=("-initbackup")
+fi
+# backupinterval creates a backup every X minutes, the server does not clean these backups up
+if [[ -n $BACKUP_INTERVAL_MINUTES ]]; then
+    extra_opts+=("-backupinterval=${BACKUP_INTERVAL_MINUTES}")
+fi
+
 # Build launch arguments
 echo "$(timestamp) INFO: Constructing launch arguments"
 LAUNCH_ARGS="${SERVER_LEVEL} -server -SILENT -SteamServerName=\"${SERVER_NAME}\" -${GAME_MODE} -MaxPlayers=${SERVER_SLOTS} -backup=${BACKUP} -saving=${SAVING} -log -UTF8Output -MULTIHOME=${LISTEN_ADDRESS} -Port=${GAME_PORT} -QueryPort=${QUERY_PORT} -online=Steam -forcepassthrough -adminpsw=${ADMIN_PASSWORD}"
 
 if [ -n "${SERVER_PASSWORD}" ]; then
-    LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=${SERVER_PASSWORD}"
+    LAUNCH_ARGS="${LAUNCH_ARGS} -PSW=\"${SERVER_PASSWORD}\""
+fi
+
+if [ -n "${ADMIN_PASSWORD}" ]; then
+    LAUNCH_ARGS="${LAUNCH_ARGS} -adminpsw=\"${ADMIN_PASSWORD}\""
+fi
+
+if [ -n "${RCON_ADDRESS}" ] && [ -n "${RCON_PASSWORD}" ]; then
+    LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDRESS} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
 fi
 
 # Let's go!
@@ -101,16 +128,15 @@ echo "$(timestamp) INFO: Launching Soulmask. Good luck out there, Chieftan!"
 echo "--------------------------------------------------------------------------------"
 echo "Server Name: ${SERVER_NAME}"
 echo "Game Mode: ${GAME_MODE}"
+echo "Mods: ${MOD_ID_LIST}"
 echo "Server Level: ${SERVER_LEVEL}"
 echo "Server Password: ${SERVER_PASSWORD}"
 echo "Admin Password: ${ADMIN_PASSWORD}"
 echo "Game Port: ${GAME_PORT}"
 echo "Query Port: ${QUERY_PORT}"
 echo "Server Slots: ${SERVER_SLOTS}"
-echo "Listen Address: ${LISTEN_ADDRESS}"
-echo "Database Backup (seconds): ${BACKUP}"
-echo "World Save (seconds): ${SAVING}"
-echo "Container Image Version: ${IMAGE_VERSION} "
+echo "RCON Port: ${RCON_PORT}"
+echo "RCON Password: ${RCON_PASSWORD}"
 echo "--------------------------------------------------------------------------------"
 echo ""
 echo ""

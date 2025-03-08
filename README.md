@@ -6,6 +6,7 @@
 Run Soulmask dedicated server in a container. Optionally includes helm chart for running in Kubernetes.
 
 **Disclaimer:** This is not an official image. No support, implied or otherwise is offered to any end user by the author or anyone else. Feel free to do what you please with the contents of this repo.
+
 ## Usage
 
 The processes within the container do **NOT** run as root. Everything runs as the user steam (gid:10000/uid:10000 by default). If you exec into the container, you will drop into `/home/steam` as the steam user. Soulmask will be installed to `/home/steam/soulmask`. Any persistent volumes should be mounted to `/home/steam/soulmask` and be owned by 10000:10000. 
@@ -34,6 +35,15 @@ Game ports are arbitrary. You can use which ever values you want above 1000. Mak
 | BACKUP | Specifies the interval for writing the game database to disk (unit: seconds) | 900 | False |
 | SAVING | Specifies the interval for writing game objects to the database (unit: seconds) | 600 | False |
 | LISTEN_ADDRESS | IP address for server to listen on | 0.0.0.0 | False |
+<<<<<<< Updated upstream
+=======
+| INIT_BACKUP | If "true", server will backup world on each server start | None | False |
+| BACKUP_INTERVAL_MINUTES | Specifies in minutes how often to backup the world. Warning, backups are not cleaned up automatically | None | False |
+| RCON_ADDRESS | IP address to bind the RCON listener to | 0.0.0.0 | False |
+| RCON_PORT | TCP port that the RCON listener will bind to | 19000 | False |
+| RCON_PASSWORD | Password for the RCON client to connect | None | False |
+| MOD_ID_LIST | Comma separated list of mod IDs | None | False |
+>>>>>>> Stashed changes
 
 ### Docker
 
@@ -74,6 +84,7 @@ docker-compose down --timeout 90
 ```
 
 compose.yaml file:
+
 ```yaml
 services:
   soulmask:
@@ -92,6 +103,7 @@ volumes:
 ```
 
 default.env file:
+
 ```properties
 SERVER_NAME="Soulmask Containerized"
 GAME_MODE="pve"
@@ -103,6 +115,10 @@ SERVER_SLOTS="50"
 LISTEN_ADDRESS="0.0.0.0"
 BACKUP=900
 SAVING=600
+RCON_ADDR=""
+RCON_PASSWORD=""
+RCON_PORT=""
+MOD_ID_LIST=
 ```
 
 ### Podman
@@ -130,7 +146,9 @@ podman run \
 ```
 
 ### Quadlet
+
 To run the container with Podman's new quadlet subsystem, make a file under (when running as root) /etc/containers/systemd/soulmask.container containing:
+
 ```properties
 [Unit]
 Description=Soulmask Game Server
@@ -163,6 +181,22 @@ WantedBy=multi-user.target default.target
 ### Kubernetes
 
 I've built a Helm chart and have included it in the `helm` directory within this repo. Modify the `values.yaml` file to your liking and install the chart into your cluster. Be sure to create and specify a namespace as I did not include a template for provisioning a namespace.
+
+The chart in this repo is also hosted in my helm-charts repository [here](https://jsknnr.github.io/helm-charts)
+
+To install this chart from my helm-charts repository:
+
+```bash
+helm repo add jsknnr https://jsknnr.github.io/helm-charts
+helm repo update
+```
+
+To install the chart from the repo:
+
+```bash
+helm install soulmask jsknnr/soulmask-dedicated-server --values myvalues.yaml
+# Where myvalues.yaml is your copy of the Values.yaml file with the settings that you want
+```
 
 ## Troubleshooting
 

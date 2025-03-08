@@ -1,0 +1,30 @@
+name: Release to Charts Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  commit-to-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v3
+
+      - name: Commit and push changes to charts repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+          CHART_NAME: soulmask-dedicated-server
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone https://github.com/jsknnr/helm-charts.git
+          cd helm-charts/charts
+          [ ! -d "${{env.CHART_NAME}}" ] && mkdir "${{env.CHART_NAME}}"
+          cp -r ../../helm/* ./"${{env.CHART_NAME}}"/
+          git remote set-url origin 'https://${{secrets.ACTIONS_GITHUB_TOKEN}}@github.com/jsknnr/helm-charts.git'
+          git add .
+          git commit -m "Automated commit from GitHub Actions for ${{env.CHART_NAME}}"
+          git push origin main
