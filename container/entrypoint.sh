@@ -111,6 +111,10 @@ if [ -n "${ADMIN_PASSWORD}" ]; then
     LAUNCH_ARGS="${LAUNCH_ARGS} -adminpsw=\"${ADMIN_PASSWORD}\""
 fi
 
+if [ -n "${RCON_ADDR}" ] && [ -n "${RCON_PASSWORD}" ]; then
+    LAUNCH_ARGS="${LAUNCH_ARGS} -rconaddr=${RCON_ADDR} -rconpsw=${RCON_PASSWORD} -rconport=${RCON_PORT}"
+fi
+
 # Let's go!
 echo "$(timestamp) INFO: Lighting the bonfire..."
 
